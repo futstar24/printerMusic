@@ -112,7 +112,7 @@ def extract_melody_notes(file_path):
 midi_file_path = "e flat.mid"
 
 # Extract the melody notes from the MIDI file
-# melody_notes = extract_melody_notes(midi_file_path)
+melody_notes = extract_melody_notes(midi_file_path)
 
 # Print the extracted melody notes
 '''for note in melody_notes:
@@ -131,11 +131,11 @@ def convert_to_print(noteList):
 
     freqList = sortFreqs(noteNames)
 
-    for note in noteNames:
-        if note[1] == '#': #Clean up note names to proper format
-            note = note[0] + 'S' + note[2:]
+    for idx, note in enumerate(freqList):
+        if note[1] == '#':
+            freqList[idx] = note[0] + 'S' + note[2:]
 
-    for note in noteList: #Check that all notes are between C3 and C6
+    for idx, note in enumerate(noteList): #Check that all notes are between C3 and C6
         name = note[0]
         if name != "Rest":
             if (int(name[-1]) <= 3) or (int(name[-1]) >= 6):
@@ -143,16 +143,19 @@ def convert_to_print(noteList):
                     print(f'Error: note {name} out of range')
                     return
 
+        if name[1] == '#':
+            noteList[idx][0] = name[0] + 'S' + name[2:]
 
-
+    with open("output.txt", 'w', encoding="utf-8") as output:
+        for freq in freqList:
+            line = note_lines[freq]
+            output.write(f'{line}\n')
+        output.write("END\n")
+        for note in noteList:
+            output.write(f'{note[0]} {note[1]}\n')
         
 
-#melody_notes = [["BS3", 3], ["D5", 2], ["E5", 3]]
+for note in melody_notes:
+    print(f"{note[0]} {note[1]}")
 
-# for note in melody_notes:
-#     print(f"{note[0]} {note[1]}")
-
-# convert_to_print(melody_notes)
-
-for note in note_lines:
-    print(f'{note_lines[note]}')
+convert_to_print(melody_notes)
