@@ -41,6 +41,8 @@ note_lines = {   "C3" : "               U               I               K    *  
 
 noteNames = set([]) #Set of unique frequencies
 
+keyOffsets = {"G Major":0,"E Major":-2,"F Major":2,}
+
 def extract_melody_notes(file_path):
     # Load MIDI file
     midi_data = pretty_midi.PrettyMIDI("test_songs/"+file_path)
@@ -52,8 +54,6 @@ def extract_melody_notes(file_path):
     print(keySigs)
     for key in keySigs:
         print(pretty_midi.key_number_to_key_name((key.key_number)))
-        print(key.key_number)
-        keyDifference = key.key_number-7
 
     # Extract notes and their properties
     melody_notes = []
@@ -80,7 +80,7 @@ def extract_melody_notes(file_path):
 
     for note in instrument.notes:
         if pastNote == None or not (pastNote.end > note.start):
-            note_name = pretty_midi.note_number_to_name(note.pitch) #Offset to account for different keys
+            note_name = pretty_midi.note_number_to_name(note.pitch+keyOffsets[pretty_midi.key_number_to_key_name((keySigs[0].key_number))]) #Offset to account for different keys
 
             try:
                 i = tempoTimes.index(note.start)
@@ -109,7 +109,7 @@ def extract_melody_notes(file_path):
     return melody_notes
 
 # Specify the path to your MIDI file
-midi_file_path = "e flat.mid"
+midi_file_path = "hot-cross-buns.mid"
 
 # Extract the melody notes from the MIDI file
 melody_notes = extract_melody_notes(midi_file_path)

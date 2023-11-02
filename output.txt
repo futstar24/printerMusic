@@ -1,0 +1,59 @@
+  $    %       T       3    D       P       X    8       .    R     1   D4  293
+1    $       K    T  S    3       F    P       X       0    .       2   D4  293
+       1   HA   Q   LY   T               X@   7 E 2 *               1   G4  392
+1               5   ⌑E-   N‡               K   ZS   9   4I          2   G4  392
+    $7        M   V .   *        9N     ⌑        ZE     @     P3    1   A4  440
+1    ⌑Y     C#    0   Q     3,    ‡F      R T   4 -   ,   I     U   2   A4  440
+ -    /    A    U B    V C    W  V F U    G    X    & Y       1 ,   1   B4  493
+1    J . %    ⌑    L 1       O 4    P    7 Q  P 8    Q 9 P       @  2   B4  493
+&           I *UL            6-I   L          TK6 I *        R % T  1   C5  526
+1@       &   MCX           W 9A⌑M           L7W  A⌑         J*  7W  2   C5  526
+  $6   %   F   T   R1   ‡   D   0   P   1V   B   8   K   .T   R     1   D5  587
+1V   $3  8   K 0 HT   R   3   %   F0   P   1   X   D8   K   .   V   2   D5  587
+END
+D5 4
+D4 4
+G4 8
+D5 4
+D4 4
+G4 8
+D5 2
+C5 2
+B4 2
+A4 2
+G4 2
+A4 2
+B4 2
+C5 2
+D5 4
+D4 4
+G4 4
+G4 2
+G4 2
+D5 2
+D5 2
+D5 2
+D5 2
+C5 4
+C5 4
+Rest 4
+Rest 4
+Rest 1
+B4 1
+B4 1
+B4 0
+B4 1
+B4 1
+G4 0
+G4 1
+G4 2
+C5 2
+B4 2
+A4 2
+G4 2
+A4 2
+B4 2
+C5 2
+D5 4
+D4 4
+G4 8
