@@ -51,20 +51,37 @@ note_frequencies = {
     'C6': 1046.50, 'CS6': 1108.73, 'D6': 1174.66, 'DS6': 1244.51, 'E6': 1318.51, 'F6': 1396.91, 'FS6': 1479.98, 'G6': 1567.98, 'GS6': 1661.22, 'A6': 1760.00, 'AS6': 1864.66, 'B6': 1975.53, "Rest": 0
 }
 
+instruments_midiNumbers = {
+    'Acoustic Grand Piano': 0, 'Bright Acoustic Piano': 1, 'Electric Grand Piano': 2, 'Honky-tonk Piano': 3, 'Electric Piano 1': 4, 'Electric Piano 2': 5, 'Harpsichord': 6, 'Clavinet': 7, 'Celesta': 8, 'Glockenspiel': 9, 'Music Box': 10, 'Vibraphone': 11, 'Marimba': 12, 'Xylophone': 13, 'Tubular Bells': 14, 'Dulcimer': 15, 'Drawbar Organ': 16, 'Percussive Organ': 17, 'Rock Organ': 18, 'Church Organ': 19, 'Reed Organ': 20, 'Accordion': 21, 'Harmonica': 22, 'Tango Accordion': 23, 'Acoustic Guitar (nylon)': 24, 'Acoustic Guitar (steel)': 25, 'Electric Guitar (jazz)': 26, 'Electric Guitar (clean)': 27, 'Electric Guitar (muted)': 28, 'Overdriven Guitar': 29, 'Distortion Guitar': 30, 'Guitar Harmonics': 31, 'Acoustic Bass': 32, 'Electric Bass (finger)': 33, 'Electric Bass (pick)': 34, 'Fretless Bass': 35, 'Slap Bass 1': 36, 'Slap Bass 2': 37, 'Synth Bass 1': 38, 'Synth Bass 2': 39, 'Violin': 40, 'Viola': 41, 'Cello': 42, 'Contrabass': 43, 'Tremolo Strings': 44, 'Pizzicato Strings': 45, 'Orchestral Harp': 46, 'Timpani': 47, 'String Ensemble 1': 48, 'String Ensemble 2': 49, 'SynthStrings 1': 50, 'SynthStrings 2': 51, 'Choir Aahs': 52, 'Voice Oohs': 53, 'Synth Voice': 54, 'Orchestra Hit': 55, 'Trumpet': 56, 'Trombone': 57, 'Tuba': 58, 'Muted Trumpet': 59, 'French Horn': 60, 'Brass Section': 61, 'SynthBrass 1': 62, 'SynthBrass 2': 63, 'Soprano Sax': 64, 'Alto Sax': 65, 'Tenor Sax': 66, 'Baritone Sax': 67, 'Oboe': 68, 'English Horn': 69, 'Bassoon': 70, 'Clarinet': 71, 'Piccolo': 72, 'Flute': 73, 'Recorder': 74, 'Pan Flute': 75, 'Blown Bottle': 76, 'Shakuhachi': 77, 'Whistle': 78, 'Ocarina': 79, 'Lead 1 (square)': 80, 'Lead 2 (sawtooth)': 81, 'Lead 3 (calliope)': 82, 'Lead 4 (chiff)': 83, 'Lead 5 (charang)': 84, 'Lead 6 (voice)': 85, 'Lead 7 (fifths)': 86, 'Lead 8 (bass + lead)': 87, 'Pad 1 (new age)': 88, 'Pad 2 (warm)': 89, 'Pad 3 (polysynth)': 90, 'Pad 4 (choir)': 91, 'Pad 5 (bowed)': 92, 'Pad 6 (metallic)': 93, 'Pad 7 (halo)': 94, 'Pad 8 (sweep)': 95, 'FX 1 (rain)': 96, 'FX 2 (soundtrack)': 97, 'FX 3 (crystal)': 98, 'FX 4 (atmosphere)': 99, 'FX 5 (brightness)': 100, 'FX 6 (goblins)': 101, 'FX 7 (echoes)': 102, 'FX 8 (sci-fi)': 103, 'Sitar': 104, 'Banjo': 105, 'Shamisen': 106, 'Koto': 107, 'Kalimba': 108, 'Bagpipe': 109, 'Fiddle': 110, 'Shanai': 111, 'Tinkle Bell': 112, 'Agogo': 113, 'Steel Drums': 114, 'Woodblock': 115, 'Taiko Drum': 116, 'Melodic Tom': 117, 'Synth Drum': 118, 'Reverse Cymbal': 119, 'Guitar Fret Noise': 120, 'Breath Noise': 121, 'Seashore': 122, 'Bird Tweet': 123, 'Telephone Ring': 124, 'Helicopter': 125, 'Applause': 126, 'Gunshot': 127
+}
 
 noteNames = set([]) #Set of unique frequencies
 
 
-def extract_melody_notes(file_path):
+def extract_melody_notes(file_path, instrumentName):
     # Load MIDI file
     midi_data = pretty_midi.PrettyMIDI("test_songs/"+file_path)
 
     # Get the instrument (assuming it's the first instrument)
     # You may need to modify this based on your MIDI file structure
-    instrument = midi_data.instruments[0]
+
+    melody_notes = []
+    instrument = pretty_midi.Instrument(0)
+    try:
+        selectedInstrument = instruments_midiNumbers[instrumentName]
+        instruments = midi_data.instruments
+        for possibleInstrument in instruments:
+            if possibleInstrument.program == selectedInstrument and len(possibleInstrument.notes) > len(instrument.notes):
+                instrument = possibleInstrument
+    except:
+        pass
+
+    if len(instrument.notes) == 0:
+        print("instrument could not be found")
+        return melody_notes
+
 
     # Extract notes and their properties
-    melody_notes = []
     tempoChanges = midi_data.get_tempo_changes()
     tempoTimes = tempoChanges[0].tolist()
     tempos = tempoChanges[1].tolist()
@@ -97,7 +114,7 @@ def extract_melody_notes(file_path):
             instrument.notes[i] = None
             continue
         
-        if i == 0 or pastNote == None or i == len(instrument.notes)-1 or (i < len(instrument.notes)-1 and (pastNote.end <= note.start or note.end != pastNote.start and note.pitch > pastNote.pitch)): #remove any notes that start during a rest but then overlap another note
+        if i == 0 or pastNote == None or i == len(instrument.notes)-1 or (i < len(instrument.notes)-1 and (pastNote.end <= note.start or note.end != pastNote.start and abs(pastNote.pitch-note.pitch) < 12)): #remove any notes that start during a rest but then overlap another note
             
             note_name = pretty_midi.note_number_to_name(note.pitch)
             
@@ -107,7 +124,7 @@ def extract_melody_notes(file_path):
             noteNames.add(note_name)
             duration = ((note.end-note.start)*(currentTempo/60))*4
 
-            if pastNote is not None and round((note.start)*(currentTempo/60),2)-round((pastNote.end)*(currentTempo/60),2) > 0.2: #add rests if the time between notes is greater than 0.2; this is a margin I made up but is necessary
+            if pastNote is not None and round((note.start)*(currentTempo/60),2)-round((pastNote.end)*(currentTempo/60),2) > 0.5: #add rests if the time between notes is greater than 0.2; this is a margin I made up but is necessary
                 
                 restDuration = round((note.start-pastNote.end)*(currentTempo/60)*4)
 
@@ -124,10 +141,10 @@ def extract_melody_notes(file_path):
     return melody_notes
 
 # Specify the path to your MIDI file
-midi_file_path = "la-marseillaise.mid"
+midi_file_path = "star-spangled banner.midi"
 
 # Extract the melody notes from the MIDI file
-melody_notes = extract_melody_notes(midi_file_path)
+melody_notes = extract_melody_notes(midi_file_path,"Acoustic Grand Piano")
 
 def sortFreqs(freqSet):
     tempList = list(freqSet)
@@ -171,13 +188,15 @@ def play_note(note, duration=1.0): #for testing the music output
     wave = 0.5 * np.sin(2 * np.pi * frequency * t)
     sd.play(wave, samplerate=44100)
     sd.wait()
-    
+
+
 for note in melody_notes:
     print(f"{note[0]} {note[1]}")
-
 convert_to_print(melody_notes)
 
-for note in melody_notes: #for testing the music output
-    play_note(note[0],note[1]/12)
+
+
+#for note in melody_notes: #for testing the music output
+ #   play_note(note[0],note[1]/12)
 
 
