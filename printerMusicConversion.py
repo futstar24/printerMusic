@@ -141,10 +141,10 @@ def extract_melody_notes(file_path, instrumentName):
     return melody_notes
 
 # Specify the path to your MIDI file
-midi_file_path = "star-spangled banner.midi"
+midi_file_path = "nights.midi"
 
 # Extract the melody notes from the MIDI file
-melody_notes = extract_melody_notes(midi_file_path,"Acoustic Grand Piano")
+melody_notes = extract_melody_notes(midi_file_path,"Tenor Sax")
 
 def sortFreqs(freqSet):
     tempList = list(freqSet)
@@ -196,7 +196,7 @@ convert_to_print(melody_notes)
 
 
 
-#for note in melody_notes: #for testing the music output
- #   play_note(note[0],note[1]/12)
+for note in melody_notes: #for testing the music output
+    play_note(note[0],note[1]/12)
 
 
