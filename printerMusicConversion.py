@@ -1,3 +1,5 @@
+import numpy as np
+import sounddevice as sd
 import pretty_midi
 
 note_lines = {   "C3" : "               U               I               K    *            T  1   C3  130\n1            M               9                    ⌑            L    2   C3  130",  
@@ -39,6 +41,17 @@ note_lines = {   "C3" : "               U               I               K    *  
                 "C6" : "&9 $&  VM8  I *UL    7$&K V    I8* L  UH7  KA TK6 I * SJ  H7   %$   1   C6  1046"
 }
 
+
+
+# Note frequencies (for testing)
+note_frequencies = {
+    'C3': 130.81, 'CS3': 138.59, 'D3': 146.83, 'DS3': 155.56, 'E3': 164.81, 'F3': 174.61, 'FS3': 185.00, 'G3': 196.00, 'GS3': 207.65, 'A3': 220.00, 'AS3': 233.08, 'B3': 246.94,
+    'C4': 261.63, 'CS4': 277.18, 'D4': 293.66, 'DS4': 311.13, 'E4': 329.63, 'F4': 349.23, 'FS4': 369.99, 'G4': 392.00, 'GS4': 415.30, 'A4': 440.00, 'AS4': 466.16, 'B4': 493.88,
+    'C5': 523.25, 'CS5': 554.37, 'D5': 587.33, 'DS5': 622.25, 'E5': 659.26, 'F5': 698.46, 'FS5': 739.99, 'G5': 783.99, 'GS5': 830.61, 'A5': 880.00, 'AS5': 932.33, 'B5': 987.77,
+    'C6': 1046.50, 'CS6': 1108.73, 'D6': 1174.66, 'DS6': 1244.51, 'E6': 1318.51, 'F6': 1396.91, 'FS6': 1479.98, 'G6': 1567.98, 'GS6': 1661.22, 'A6': 1760.00, 'AS6': 1864.66, 'B6': 1975.53, "Rest": 0
+}
+
+
 noteNames = set([]) #Set of unique frequencies
 
 
@@ -60,7 +73,7 @@ def extract_melody_notes(file_path):
 
     removeableNotes = []
 
-    for i in range(len(instrument.notes)): #If multiple notes played at a time, reduce to just the highest
+    for i in range(len(instrument.notes)): #If multiple notes start at a time while another note is already playing, reduce to only playing the highest note
         j = i+1
         while j < len(instrument.notes):
             note1 = instrument.notes[i]
@@ -80,27 +93,25 @@ def extract_melody_notes(file_path):
 
         currentTempo = tempos[currentTempoIndex]
 
-        if note.pitch < 48 or note.pitch > 84 or note in removeableNotes:
+        if note.pitch < 48 or note.pitch > 84 or note in removeableNotes: #removes unneeded or unplayable notes
             instrument.notes[i] = None
-            pastNote = None
             continue
         
-        if i == 0 or instrument.notes[i-1] == None or i == len(instrument.notes)-1 or (i < len(instrument.notes)-1 and (instrument.notes[i-1].end <= note.start or note.end != instrument.notes[i-1].start and note.pitch > instrument.notes[i-1].pitch)):
-    
+        if i == 0 or pastNote == None or i == len(instrument.notes)-1 or (i < len(instrument.notes)-1 and (pastNote.end <= note.start or note.end != pastNote.start and note.pitch > pastNote.pitch)): #remove any notes that start during a rest but then overlap another note
+            
             note_name = pretty_midi.note_number_to_name(note.pitch)
-
-            if currentTempoIndex < len(tempos)-1 and note.start >= tempoTimes[currentTempoIndex]+1:
+            
+            if currentTempoIndex < len(tempos)-1 and note.start >= tempoTimes[currentTempoIndex]+1: #switch tempos if the song switches tempo
                 currentTempoIndex+=1
-                print("tempo switch at note", note_name)
 
             noteNames.add(note_name)
             duration = ((note.end-note.start)*(currentTempo/60))*4
 
-            if pastNote is not None and round((note.start)*(currentTempo/60),2)-round((pastNote.end)*(currentTempo/60),2) > 0.2:
+            if pastNote is not None and round((note.start)*(currentTempo/60),2)-round((pastNote.end)*(currentTempo/60),2) > 0.2: #add rests if the time between notes is greater than 0.2; this is a margin I made up but is necessary
                 
                 restDuration = round((note.start-pastNote.end)*(currentTempo/60)*4)
 
-                while restDuration-4 >= 0:
+                while restDuration-4 >= 0: #split the rest into multiple rests so that the computer can process them correctly
                     restDuration-=4
                     melody_notes.append(["Rest",4,round((pastNote.end)*(currentTempo/60),2),round((note.start)*(currentTempo/60),2)])
                 
@@ -113,7 +124,7 @@ def extract_melody_notes(file_path):
     return melody_notes
 
 # Specify the path to your MIDI file
-midi_file_path = "AllOfMe.mid"
+midi_file_path = "la-marseillaise.mid"
 
 # Extract the melody notes from the MIDI file
 melody_notes = extract_melody_notes(midi_file_path)
@@ -152,8 +163,21 @@ def convert_to_print(noteList):
         output.write("END\n")
         for note in noteList:
             output.write(f'{note[0]} {note[1]}\n')
+
+def play_note(note, duration=1.0): #for testing the music output
+    print(note)
+    frequency = note_frequencies[note]
+    t = np.linspace(0, duration, int(44100 * duration), False)
+    wave = 0.5 * np.sin(2 * np.pi * frequency * t)
+    sd.play(wave, samplerate=44100)
+    sd.wait()
     
 for note in melody_notes:
     print(f"{note[0]} {note[1]}")
 
 convert_to_print(melody_notes)
+
+for note in melody_notes: #for testing the music output
+    play_note(note[0],note[1]/12)
+
+
