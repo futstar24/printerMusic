@@ -141,10 +141,10 @@ def extract_melody_notes(file_path, instrumentName):
     return melody_notes
 
 # Specify the path to your MIDI file
-midi_file_path = "nights.midi"
+midi_file_path = "Bette Midler - The Rose.mid"
 
 # Extract the melody notes from the MIDI file
-melody_notes = extract_melody_notes(midi_file_path,"Tenor Sax")
+melody_notes = extract_melody_notes(midi_file_path,"Vibraphone")
 
 def sortFreqs(freqSet):
     tempList = list(freqSet)
