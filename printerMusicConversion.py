@@ -146,7 +146,7 @@ midi_file_path = "Bette Midler - The Rose.mid"
 # Extract the melody notes from the MIDI file
 melody_notes = extract_melody_notes(midi_file_path,"Vibraphone")
 
-def sortFreqs(freqSet):
+def sort_freqs(freqSet):
     tempList = list(freqSet)
     tempList.sort(key=pretty_midi.note_name_to_number)
     return tempList
@@ -160,12 +160,20 @@ def standardize(note):
     space_len = 5 - (len(note[0])+len(str(note[1])))
     return note[0] + ' '*space_len + str(note[1])
 
+def end_line(index, lineLength): #For numbering cards at end of line
+    zero_len = 3 - (len(str(index)))
+    index_str = "  " + '0'*zero_len + str(index)
+    index_str = "     "*(15-lineLength) + index_str + ' '
+
+    return index_str
+
+
 def convert_to_print(noteList):
     #Converts list of notes to print format, write to output file
     #Parameters: List of notes (each note is a list of [str: note name, int: duration])
     #Returns: None
 
-    freqList = sortFreqs(noteNames)
+    freqList = sort_freqs(noteNames)
 
     for idx, note in enumerate(freqList):
         if note[1] == '#':
@@ -184,6 +192,7 @@ def convert_to_print(noteList):
         if name == "Rest":
             noteList[idx][0] = 'R' + str(noteList[idx][1])
 
+    note_count = 0
     card_total = len(noteList)//15
     with open("output.txt", 'w', encoding="utf-8") as output:
         for freq in freqList:
@@ -191,14 +200,14 @@ def convert_to_print(noteList):
             output.write(f'{line}\n')
         output.write("END\n")
         for i in range(card_total+1):
+            note_count = 0
             for j in range(15*i, 15*(i+1)):
-                try:
-                    #output.write(f'{noteList[j][0]} {noteList[j][1]}')
+                if j < len(noteList):
                     output.write(standardize(noteList[j]))
-                except:
-                    print("ERROR")
+                else:
                     break
-            output.write(f' {i}\n')
+                note_count += 1
+            output.write(f'{end_line(i+1, note_count)}\n')
 
 
 def play_note(note, duration=1.0): #for testing the music output
