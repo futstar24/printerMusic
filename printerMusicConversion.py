@@ -1,8 +1,8 @@
 import numpy as np
-import sounddevice as sd
+# import sounddevice as sd
 import pretty_midi
 
-note_lines = {   "C3" : "               U               I               K    *            T  1   C3  130\n1            M               9                    ⌑            L    2   C3  130",  
+note_lines = {  "C3" : "               U               I               K    *            T  1   C3  130\n1            M               9                    ⌑            L    2   C3  130",  
                 "CS3" : "                                                                    1   CS3 138\n16#UZKP*E&38                                                        2   CS3 138", 
                 "D3" : "  $            T            D               X            .          1   D3  146\n1            K            3            P               0            2   D3  146", 
                 "DS3" : "         K             U           3          C              M      1   DS3 155\n1⌑          *             K           /          1              B   2   DS3 155", 
@@ -172,22 +172,36 @@ def convert_to_print(noteList):
 
         if name[1] == '#':
             noteList[idx][0] = name[0] + 'S' + name[2:]
+        if name == "Rest":
+            noteList[idx][0] = 'R' + str(noteList[idx][1])
 
+    note_count = 0
+    card_total = len(noteList)//15
     with open("output.txt", 'w', encoding="utf-8") as output:
         for freq in freqList:
             line = note_lines[freq]
             output.write(f'{line}\n')
         output.write("END\n")
-        for note in noteList:
-            output.write(f'{note[0]} {note[1]}\n')
+        for i in range(card_total):
+            for j in range(15*i, 15*(i+1)):
+                try:
+                    output.write(f'{noteList[j][0]} {noteList[j][1]}')
+                except:
+                    return
+            output.write(f' {i}\n')
+        # for note in noteList:
+        #     output.write(f'{note[0]} {note[1]}\n')
 
 def play_note(note, duration=1.0): #for testing the music output
     print(note)
-    frequency = note_frequencies[note]
+    try:
+        frequency = note_frequencies[note]
+    except:
+        frequency = 0
     t = np.linspace(0, duration, int(44100 * duration), False)
     wave = 0.5 * np.sin(2 * np.pi * frequency * t)
-    sd.play(wave, samplerate=44100)
-    sd.wait()
+    # sd.play(wave, samplerate=44100)
+    # sd.wait()
 
 
 for note in melody_notes:
