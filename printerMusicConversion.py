@@ -151,6 +151,15 @@ def sortFreqs(freqSet):
     tempList.sort(key=pretty_midi.note_name_to_number)
     return tempList
 
+def standardize(note):
+    #Standardizes each note/rest to a string of length 5
+    
+    if note[0] == "Rest":
+        return f'R{note[1]}   ' #Rests always have 3 spaces after
+    
+    space_len = 5 - (len(note[0])+len(str(note[1])))
+    return note[0] + ' '*space_len + str(note[1])
+
 def convert_to_print(noteList):
     #Converts list of notes to print format, write to output file
     #Parameters: List of notes (each note is a list of [str: note name, int: duration])
@@ -175,22 +184,22 @@ def convert_to_print(noteList):
         if name == "Rest":
             noteList[idx][0] = 'R' + str(noteList[idx][1])
 
-    note_count = 0
     card_total = len(noteList)//15
     with open("output.txt", 'w', encoding="utf-8") as output:
         for freq in freqList:
             line = note_lines[freq]
             output.write(f'{line}\n')
         output.write("END\n")
-        for i in range(card_total):
+        for i in range(card_total+1):
             for j in range(15*i, 15*(i+1)):
                 try:
-                    output.write(f'{noteList[j][0]} {noteList[j][1]}')
+                    #output.write(f'{noteList[j][0]} {noteList[j][1]}')
+                    output.write(standardize(noteList[j]))
                 except:
-                    return
+                    print("ERROR")
+                    break
             output.write(f' {i}\n')
-        # for note in noteList:
-        #     output.write(f'{note[0]} {note[1]}\n')
+
 
 def play_note(note, duration=1.0): #for testing the music output
     print(note)
@@ -210,7 +219,7 @@ convert_to_print(melody_notes)
 
 
 
-for note in melody_notes: #for testing the music output
-    play_note(note[0],note[1]/12)
+# for note in melody_notes: #for testing the music output
+#     play_note(note[0],note[1]/12)
 
 
