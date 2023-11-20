@@ -1,6 +1,6 @@
 import pretty_midi
 import numpy as np
-# import sounddevice as sd
+import sounddevice as sd
 from math import floor
 
 note_lines = {  "C3" : "               U               I               K    *            T  1   C3  130\n1            M               9                    ⌑            L    2   C3  130",  
@@ -223,12 +223,6 @@ def convert_to_print(noteList):
                 note_count += 1
             output.write(f'{end_line(i+1, note_count)}\n')
 
-        for i, note in enumerate(noteList):
-            if i > maxNumberOfNotes:
-                print("SONG LIMIT REACHED")
-                return
-            output.write(f'{note[0]} {note[1]}\n')
-
 def play_note(note, duration=1.0): #for testing the music output
     print(note)
     try:
@@ -237,8 +231,8 @@ def play_note(note, duration=1.0): #for testing the music output
         frequency = 0
     t = np.linspace(0, duration, int(44100 * duration), False)
     wave = 0.5 * np.sin(2 * np.pi * frequency * t)
-    # sd.play(wave, samplerate=44100)
-    # sd.wait()
+    sd.play(wave, samplerate=44100)
+    sd.wait()
 
 
 for note in melody_notes:
