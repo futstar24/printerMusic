@@ -216,7 +216,7 @@ def convert_to_print(noteList):
         for i in range(card_total+1):
             note_count = 0
             for j in range(15*i, 15*(i+1)):
-                if j < len(noteList):
+                if j < len(noteList): # and j < maxNumberOfNotes
                     output.write(standardize(noteList[j]))
                 else:
                     break
