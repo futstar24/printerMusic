@@ -1,6 +1,7 @@
+import pretty_midi
 import numpy as np
 import sounddevice as sd
-import pretty_midi
+from math import floor
 
 note_lines = {   "C3" : "               U               I               K    *            T  1   C3  130\n1            M               9                    ⌑            L    2   C3  130",  
                 "CS3" : "                                                                    1   CS3 138\n16#UZKP*E&38                                                        2   CS3 138", 
@@ -57,7 +58,6 @@ instruments_midiNumbers = {
 
 noteNames = set([]) #Set of unique frequencies
 
-
 def extract_melody_notes(file_path, instrumentName):
     # Load MIDI file
     midi_data = pretty_midi.PrettyMIDI("test_songs/"+file_path)
@@ -87,7 +87,6 @@ def extract_melody_notes(file_path, instrumentName):
     tempos = tempoChanges[1].tolist()
     currentTempoIndex = 0
     currentTempo = tempos[currentTempoIndex]
-
     removeableNotes = []
 
     for i in range(len(instrument.notes)): #If multiple notes start at a time while another note is already playing, reduce to only playing the highest note
@@ -103,6 +102,14 @@ def extract_melody_notes(file_path, instrumentName):
             j+=1
 
     pastNote = None
+
+    durationFactor = 1
+
+    for i in range(len(instrument.notes)):
+        note = instrument.notes[i]
+        duration = ((note.end-note.start)*(currentTempo/60))*4
+        if round(duration) == 0:
+            durationFactor = 2
 
     for i in range(len(instrument.notes)):
         
@@ -122,16 +129,20 @@ def extract_melody_notes(file_path, instrumentName):
                 currentTempoIndex+=1
 
             noteNames.add(note_name)
-            duration = ((note.end-note.start)*(currentTempo/60))*4
+            duration = ((note.end-note.start)*(currentTempo/60))*4*durationFactor
 
             if pastNote is not None and round((note.start)*(currentTempo/60),2)-round((pastNote.end)*(currentTempo/60),2) > 0.5: #add rests if the time between notes is greater than 0.2; this is a margin I made up but is necessary
                 
-                restDuration = round((note.start-pastNote.end)*(currentTempo/60)*4)
+                restDuration = round((note.start-pastNote.end)*(currentTempo/60)*4*durationFactor)
 
+                while restDuration-8 >= 0: #split the rest into multiple rests so that the computer can process them correctly
+                    restDuration-=8
+                    melody_notes.append(["Rest",8,round((pastNote.end)*(currentTempo/60),2),round((note.start)*(currentTempo/60),2)])
+                
                 while restDuration-4 >= 0: #split the rest into multiple rests so that the computer can process them correctly
                     restDuration-=4
                     melody_notes.append(["Rest",4,round((pastNote.end)*(currentTempo/60),2),round((note.start)*(currentTempo/60),2)])
-                
+
                 if restDuration > 0:
                     melody_notes.append(["Rest",restDuration, round((pastNote.end)*(currentTempo/60),2),round((note.start)*(currentTempo/60),2)])
             
@@ -141,10 +152,10 @@ def extract_melody_notes(file_path, instrumentName):
     return melody_notes
 
 # Specify the path to your MIDI file
-midi_file_path = "Bette Midler - The Rose.mid"
+midi_file_path = "Michael Jackson - Beat It.mid"
 
 # Extract the melody notes from the MIDI file
-melody_notes = extract_melody_notes(midi_file_path,"Vibraphone")
+melody_notes = extract_melody_notes(midi_file_path,"Lead 8 (bass + lead)")
 
 def sortFreqs(freqSet):
     tempList = list(freqSet)
@@ -155,7 +166,6 @@ def convert_to_print(noteList):
     #Converts list of notes to print format, write to output file
     #Parameters: List of notes (each note is a list of [str: note name, int: duration])
     #Returns: None
-
     freqList = sortFreqs(noteNames)
 
     for idx, note in enumerate(freqList):
@@ -169,7 +179,6 @@ def convert_to_print(noteList):
                 if not (name == "C4" or name == "C6" or name == "BS3"): #Edges of playable range
                     print(f'Error: note {name} out of range')
                     return
-
         if name[1] == '#':
             noteList[idx][0] = name[0] + 'S' + name[2:]
 
@@ -177,8 +186,15 @@ def convert_to_print(noteList):
         for freq in freqList:
             line = note_lines[freq]
             output.write(f'{line}\n')
+        
+        diffFrequencies = len(freqList)
+        maxNumberOfNotes = floor((4000-75*diffFrequencies)/11)
+        print("Max Number of Notes: ", maxNumberOfNotes)
         output.write("END\n")
-        for note in noteList:
+        for i, note in enumerate(noteList):
+            if i > maxNumberOfNotes:
+                print("SONG LIMIT REACHED")
+                return
             output.write(f'{note[0]} {note[1]}\n')
 
 def play_note(note, duration=1.0): #for testing the music output
@@ -197,6 +213,6 @@ convert_to_print(melody_notes)
 
 
 for note in melody_notes: #for testing the music output
-    play_note(note[0],note[1]/12)
+    play_note(note[0],note[1]/8)
 
 
