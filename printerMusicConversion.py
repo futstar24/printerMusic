@@ -1,9 +1,9 @@
 import pretty_midi
 import numpy as np
-import sounddevice as sd
+# import sounddevice as sd
 from math import floor
 
-note_lines = {   "C3" : "               U               I               K    *            T  1   C3  130\n1            M               9                    ⌑            L    2   C3  130",  
+note_lines = {  "C3" : "               U               I               K    *            T  1   C3  130\n1            M               9                    ⌑            L    2   C3  130",  
                 "CS3" : "                                                                    1   CS3 138\n16#UZKP*E&38                                                        2   CS3 138", 
                 "D3" : "  $            T            D               X            .          1   D3  146\n1            K            3            P               0            2   D3  146", 
                 "DS3" : "         K             U           3          C              M      1   DS3 155\n1⌑          *             K           /          1              B   2   DS3 155", 
@@ -157,16 +157,34 @@ midi_file_path = "Michael Jackson - Beat It.mid"
 # Extract the melody notes from the MIDI file
 melody_notes = extract_melody_notes(midi_file_path,"Lead 8 (bass + lead)")
 
-def sortFreqs(freqSet):
+def sort_freqs(freqSet):
     tempList = list(freqSet)
     tempList.sort(key=pretty_midi.note_name_to_number)
     return tempList
+
+def standardize(note):
+    #Standardizes each note/rest to a string of length 5
+    
+    if note[0] == "Rest":
+        return f'R{note[1]}   ' #Rests always have 3 spaces after
+    
+    space_len = 5 - (len(note[0])+len(str(note[1])))
+    return note[0] + ' '*space_len + str(note[1])
+
+def end_line(index, lineLength): #For numbering cards at end of line
+    zero_len = 3 - (len(str(index)))
+    index_str = "  " + '0'*zero_len + str(index)
+    index_str = "     "*(15-lineLength) + index_str + ' '
+
+    return index_str
+
 
 def convert_to_print(noteList):
     #Converts list of notes to print format, write to output file
     #Parameters: List of notes (each note is a list of [str: note name, int: duration])
     #Returns: None
-    freqList = sortFreqs(noteNames)
+
+    freqList = sort_freqs(noteNames)
 
     for idx, note in enumerate(freqList):
         if note[1] == '#':
@@ -181,7 +199,11 @@ def convert_to_print(noteList):
                     return
         if name[1] == '#':
             noteList[idx][0] = name[0] + 'S' + name[2:]
+        if name == "Rest":
+            noteList[idx][0] = 'R' + str(noteList[idx][1])
 
+    note_count = 0
+    card_total = len(noteList)//15
     with open("output.txt", 'w', encoding="utf-8") as output:
         for freq in freqList:
             line = note_lines[freq]
@@ -191,6 +213,16 @@ def convert_to_print(noteList):
         maxNumberOfNotes = floor((4000-75*diffFrequencies)/11)
         print("Max Number of Notes: ", maxNumberOfNotes)
         output.write("END\n")
+        for i in range(card_total+1):
+            note_count = 0
+            for j in range(15*i, 15*(i+1)):
+                if j < len(noteList):
+                    output.write(standardize(noteList[j]))
+                else:
+                    break
+                note_count += 1
+            output.write(f'{end_line(i+1, note_count)}\n')
+
         for i, note in enumerate(noteList):
             if i > maxNumberOfNotes:
                 print("SONG LIMIT REACHED")
@@ -199,11 +231,14 @@ def convert_to_print(noteList):
 
 def play_note(note, duration=1.0): #for testing the music output
     print(note)
-    frequency = note_frequencies[note]
+    try:
+        frequency = note_frequencies[note]
+    except:
+        frequency = 0
     t = np.linspace(0, duration, int(44100 * duration), False)
     wave = 0.5 * np.sin(2 * np.pi * frequency * t)
-    sd.play(wave, samplerate=44100)
-    sd.wait()
+    # sd.play(wave, samplerate=44100)
+    # sd.wait()
 
 
 for note in melody_notes:
