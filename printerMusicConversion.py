@@ -1,7 +1,17 @@
+import subprocess
+import sys
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+install("pretty_midi")
+install("sounddevice")
+
 import pretty_midi
 import numpy as np
 import sounddevice as sd
 from math import floor
+# Get the Python module name from command line arguments
+
 
 note_lines = {  "C3" : "               U               I               K    *            T  1   C3  130\n1            M               9                    ⌑            L    2   C3  130",  
                 "CS3" : "                                                                    1   CS3 138\n16#UZKP*E&38                                                        2   CS3 138", 
@@ -152,10 +162,10 @@ def extract_melody_notes(file_path, instrumentName):
     return melody_notes
 
 # Specify the path to your MIDI file
-midi_file_path = "Michael Jackson - Beat It.mid"
+midi_file_path = "star-spangled banner.midi"
 
 # Extract the melody notes from the MIDI file
-melody_notes = extract_melody_notes(midi_file_path,"Lead 8 (bass + lead)")
+melody_notes = extract_melody_notes(midi_file_path,"Acoustic Grand Piano")
 
 def sort_freqs(freqSet):
     tempList = list(freqSet)
@@ -241,7 +251,7 @@ convert_to_print(melody_notes)
 
 
 
-for note in melody_notes: #for testing the music output
-    play_note(note[0],note[1]/8)
+'''for note in melody_notes: #for testing the music output
+    play_note(note[0],note[1]/8)'''
 
 
