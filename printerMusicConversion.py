@@ -1,7 +1,4 @@
-import pretty_midi
-import numpy as np
-import sounddevice as sd
-from math import floor
+
 
 import subprocess
 import sys
@@ -10,6 +7,11 @@ def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 install("pretty_midi")
 install("sounddevice")
+
+import pretty_midi
+import numpy as np
+import sounddevice as sd
+from math import floor
 
 
 
