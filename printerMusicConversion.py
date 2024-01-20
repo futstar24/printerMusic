@@ -3,6 +3,15 @@ import numpy as np
 import sounddevice as sd
 from math import floor
 
+import subprocess
+import sys
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+install("pretty_midi")
+install("sounddevice")
+
+
 
 note_lines = {  "C3" : "               U               I               K    *            T  1   C3  130\n1            M               9                    ⌑            L    2   C3  130",  
                 "CS3" : "                                                                    1   CS3 138\n16#UZKP*E&38                                                        2   CS3 138", 
