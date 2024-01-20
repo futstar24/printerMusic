@@ -3,10 +3,10 @@
 import subprocess
 import sys
 
-def install(package):
+'''def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 install("pretty_midi")
-install("sounddevice")
+install("sounddevice")'''
 
 import pretty_midi
 import numpy as np
