@@ -1,16 +1,7 @@
-import subprocess
-import sys
-
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-install("pretty_midi")
-install("sounddevice")
-
 import pretty_midi
 import numpy as np
 import sounddevice as sd
 from math import floor
-# Get the Python module name from command line arguments
 
 
 note_lines = {  "C3" : "               U               I               K    *            T  1   C3  130\n1            M               9                    ⌑            L    2   C3  130",  
