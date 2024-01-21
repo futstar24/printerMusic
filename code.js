@@ -77,7 +77,7 @@ app.get('/', async(req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-const port = 8080;
+const port = process.env.PORT || 8080
 
 // Middleware to parse JSON data
 app.use(bodyParser.json());
