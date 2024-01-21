@@ -1,5 +1,5 @@
 document.getElementById("fileInput").addEventListener("change", function() {
-    fetch('http://localhost:8080/removeOldFiles', {
+    fetch('/removeOldFiles', {
         method: "POST",
         })
     downloadButton.style.opacity = "0"
@@ -44,7 +44,7 @@ document.getElementById("button").addEventListener("click", function() {
         dataToSend.append("file",uploadedFile)
         console.log(instruments.value)
 
-        fetch('http://localhost:8080/saveFile', {
+        fetch('/saveFile', {
             method: "POST",
             
             body: dataToSend
@@ -52,7 +52,7 @@ document.getElementById("button").addEventListener("click", function() {
         
         
 
-        fetch('http://localhost:8080/saveInstrument', {
+        fetch('/saveInstrument', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ document.getElementById("button").addEventListener("click", function() {
         
         
         
-        fetch('http://localhost:8080/makeSong', {
+        fetch('/makeSong', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
