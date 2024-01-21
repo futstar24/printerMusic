@@ -172,12 +172,12 @@ def makeSong(instrument):
     convert_to_print(melody_notes)
 
 
-    playedNotes = 10 #how many notes to play
+    '''playedNotes = 10 #how many notes to play
 
     for note in melody_notes: #for testing the music output
         if playedNotes > 0:
             play_note(note[0],note[1]/12)  #speed the notes play
-            playedNotes -= 1
+            playedNotes -= 1'''
 
 
     return len(melody_notes) != 0
