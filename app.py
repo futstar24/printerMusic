@@ -3,6 +3,11 @@ import os
 import numpy as np
 #import sounddevice as sd
 from math import floor
+import simpleaudio as sa
+
+
+
+
 
 
 
@@ -167,12 +172,12 @@ def makeSong(instrument):
     convert_to_print(melody_notes)
 
 
-    '''playedNotes = 10 #how many notes to play
+    playedNotes = 10 #how many notes to play
 
     for note in melody_notes: #for testing the music output
         if playedNotes > 0:
             play_note(note[0],note[1]/12)  #speed the notes play
-            playedNotes -= 1'''
+            playedNotes -= 1
 
 
     return len(melody_notes) != 0
@@ -245,16 +250,27 @@ def convert_to_print(noteList):
                 note_count += 1
             output.write(f'{end_line(i+1, note_count)}\n')
 
+def generate_wave(frequency, duration, amplitude=0.5, sample_rate=44100):
+    t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+    wave = amplitude * np.sin(2 * np.pi * frequency * t)
+    return wave
+
 def play_note(note, duration=1.0): #for testing the music output
     print(note)
     try:
         frequency = note_frequencies[note]
     except:
         frequency = 0
-    t = np.linspace(0, duration, int(44100 * duration), False)
-    wave = 0.5 * np.sin(2 * np.pi * frequency * t)
-    sd.play(wave, samplerate=44100)
-    sd.wait()
+
+
+    wave = generate_wave(frequency, duration)
+
+    # Convert to 16-bit PCM format
+    wave = (wave * 32767).astype(np.int16)
+
+    # Play the note using simpleaudio
+    play_obj = sa.play_buffer(wave, 1, 2, 44100)
+    play_obj.wait_done()
 
 
 
