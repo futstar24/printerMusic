@@ -86,7 +86,7 @@ app.use(bodyParser.json());
 function runcode() {
     output = ""
     console.log("start")
-    const pythonScriptPath = 'printerMusicConversion.py';
+    const pythonScriptPath = 'public/printerMusicConversion.py';
 
 
     exec(`python ${pythonScriptPath}`, (error, stdout, stderr) => {

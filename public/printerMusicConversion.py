@@ -278,7 +278,7 @@ convert_to_print(melody_notes)
 
 
 
-playedNotes = 25 #how many notes to play
+playedNotes = 0 #how many notes to play
 
 for note in melody_notes: #for testing the music output
     if playedNotes > 0:
