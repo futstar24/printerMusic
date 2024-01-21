@@ -288,7 +288,7 @@ app.secret_key = 'super secret key'
 # Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-song = None
+song = ""
 
 @app.route('/')
 @app.route('/home')
@@ -318,6 +318,24 @@ def listen():
     if request.method == 'POST':
         playSong(noteList)
         return redirect(url_for("home"))
+    
+@app.route('/sendMusicData', methods = ["GET"])
+def sendMusicData():
+    print(noteList)
+    return {"noteList":noteList}
+
+@app.route("/getSongData", methods = ["GET"])
+def getSongData():
+    if song == "":
+        return {"song":"fail"}
+    else:
+        return {"song":"success"}
+    
+@app.route("/resetSong", methods = ["GET"])
+def resetSong():
+    global song
+    song = ""
+    return {"result":"reset"}
 
 if __name__ == "__main__":
     app.run(debug=True, port= 5001)

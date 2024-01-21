@@ -17,17 +17,22 @@
     <div id = "button" style = "border-radius: 6px; background-color: lightgray; border: 2px solid black; width: 25%; margin: auto; text-align: center">
         <p>Create My Song!</p>
     </div>
-    <!--<form action = "/listen" method = "POST" enctype="multipart/form-data">
-        <button onclick="form.submit()"></button>
-    </form>-->
 
-    {% if song == None %}
-    <div id = "downloadButton" style = "text-align: center; margin-top: 25px; opacity: 0; pointer-events: none; cursor: default;" >
-        <a href = "output.txt" download="output">Download My Song File!</a>
+    {% if song == "" %}
+    <div id = "loadedSong" style = "text-align: center; margin-top: 25px; opacity: 0;" >
+        <img src="{{url_for('static', filename='playButton.png')}}" style="width: 50px;" id = "playButton">
+        <p>Preview Your Song: ~20 notes</p>
+        <div id = "downloadSong" style = "pointer-events: auto; cursor: pointer;">
+            <a href = "{{url_for('download')}}">Download My Song File!</p>
+        </div>
     </div>
     {% else %}
-    <div id = "downloadButton" style = "text-align: center; margin-top: 25px; opacity: 1; pointer-events: auto; cursor: pointer;" >
-        <a href = "{{url_for('download')}}">Download My Song File!</p>
+    <div id = "loadedSong" style = "text-align: center; margin-top: 25px; opacity: 1;" >
+        <img src="{{url_for('static', filename='playButton.png')}}" style = "width: 50px;" id = "playButton">
+        <p>Preview Your Song: ~20 notes</p>
+        <div id = "downloadSong" style = "pointer-events: auto; cursor: pointer;">
+            <a href = "{{url_for('download')}}">Download My Song File!</p>
+        </div>
     </div>
     {% endif %}
     <script src="{{url_for('static', filename='script.js')}}"></script>
