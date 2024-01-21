@@ -11,7 +11,6 @@ import simpleaudio as sa
 
 
 
-
 note_lines = {  "C3" : "               U               I               K    *            T  1   C3  130\n1            M               9                    ⌑            L    2   C3  130",  
                 "CS3" : "                                                                    1   CS3 138\n16#UZKP*E&38                                                        2   CS3 138", 
                 "D3" : "  $            T            D               X            .          1   D3  146\n1            K            3            P               0            2   D3  146", 
@@ -266,10 +265,10 @@ def play_note(note, duration=1.0): #for testing the music output
     wave = generate_wave(frequency, duration)
 
     # Convert to 16-bit PCM format
-    wave = (wave * 32767).astype(np.int16)
+    audio_format = sa.SampleFormatPCM16
 
     # Play the note using simpleaudio
-    play_obj = sa.play_buffer(wave, 1, 2, 44100)
+    play_obj = sa.play_buffer(wave, 1, 2, 44100, format=audio_format)
     play_obj.wait_done()
 
 
