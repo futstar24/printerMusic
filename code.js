@@ -70,7 +70,7 @@ var storage = multer.diskStorage(
 );
 const upload = multer({ storage: storage } )
 
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', async(req, res) => {
@@ -84,31 +84,43 @@ app.use(bodyParser.json());
 
 // Your function
 function runcode() {
-    output = ""
-    console.log("start")
-    const pythonScriptPath = 'public/printerMusicConversion.py';
 
-
-    exec(`python ${pythonScriptPath}`, (error, stdout, stderr) => {
-    if (error) {
-        console.error(`Error executing Python script: ${error}`);
-        return;
-    }
-
-    console.log(`Python script output:\n${stdout}`);
-    console.error(`Python script errors:\n${stderr}`);
     
-    });
-    console.log(output)
     
 }
 
 
 // API endpoint to call the function
 app.post('/makeSong', (req, res) => {
-  var result = runcode();
 
-  res.json({ result });
+    const getPythonScriptStdout = (pythonScriptPath) => {
+        const python = spawn('python', [pythonScriptPath]);
+        return new Promise((resolve, reject) => {
+            let result = ""
+            python.stdout.on('data', (data) => {
+                result += data
+            });
+            python.on('close', () => {
+                resolve(result)
+            });
+            python.on('error', (err) => {
+                reject(err)
+            });
+        })
+    }
+    
+    result = false
+
+    getPythonScriptStdout("public/printerMusicConversion.py").then((output) => {
+        if (output.includes("instrument could not be found")) {
+            res.json( {result} );
+        } else {
+            result = true
+            res.json( {result} )
+        }
+        console.log(output)
+    })
+    
 });
 
 app.post("/saveInstrument", (req,res) => {
