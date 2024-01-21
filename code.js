@@ -107,12 +107,6 @@ function runcode() {
 // API endpoint to call the function
 app.post('/makeSong', (req, res) => {
   var result = runcode();
-  console.log(fs.readFileSync("public/output.txt","utf8"))
-  if (fs.readFileSync("public/output.txt","utf8") == "FAIL") {
-    result = "FAIL"
-  } else {
-    result = "success"
-  }
 
   res.json({ result });
 });

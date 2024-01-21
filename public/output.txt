@@ -1,37 +1,27 @@
-   4      A       Q             P   S      M      /          0      1   AS3 233
-1   Q          N      S      M   #             0          7      D  2   AS3 233
-    #       A        Y       &        N       7     *       S       1   C4  261
-1 &     L       5     -       @        G       Z        4       O   2   C4  261
-  $    %       T       3    D       P       X    8       .    R     1   D4  293
-1    $       K    T  S    3       F    P       X       0    .       2   D4  293
-  P   %         Z      U    8      3   H      C      -    K      Z  1   DS4 311
-1    E   -         P      K U         /   6      1      H    *      2   DS4 311
-      6    F    $    M          J #    4       .       F M       ,  1   F4  349
-1    A    O    ,       /  Y 6    .       F    O  A ,       W    #   2   F4  349
        1   HA   Q   LY   T               X@   7 E 2 *               1   G4  392
 1               5   ⌑E-   N‡               K   ZS   9   4I          2   G4  392
-1 2 Q S      . N      S H    M   #    G   K    0 D      J 7      D  2   AS4 466
- ‡ 4      A X   2 Q       W.    P   S    & M      / G      M 0 D    1   AS4 466
+    $7        M   V .   *        9N     ⌑        ZE     @     P3    1   A4  440
+1    ⌑Y     C#    0   Q     3,    ‡F      R T   4 -   ,   I     U   2   A4  440
+ -    /    A    U B    V C    W  V F U    G    X    & Y       1 ,   1   B4  493
+1    J . %    ⌑    L 1       O 4    P    7 Q  P 8    Q 9 P       @  2   B4  493
 &           I *UL            6-I   L          TK6 I *        R % T  1   C5  526
 1@       &   MCX           W 9A⌑M           L7W  A⌑         J*  7W  2   C5  526
-  P     7KI     Z   F  U$   8  O   3  JH   V  C   @  -5   K     2Z  1   DS5 622
-1Y  2E   - V 7     P   4  KI   W  D   /  $6   L  1   ‡  HT   *  0   2   DS5 622
-  O   6,   F   W$   6M / .    D J #    4 A ,  O.U      F#M      6,  1   F5  698
-1W   A#   O   1,   F   /$ Y 6   O.   W   F#   O  A6,   .   W$   #   2   F5  698
+  $6   %   F   T   R1   ‡   D   0   P   1V   B   8   K   .T   R     1   D5  587
+1V   $3  8   K 0 HT   R   3   %   F0   P   1   X   D8   K   .   V   2   D5  587
+   MT2  I   HPW       . Z *      A%4 X    5DL  ‡   Z   0I      &K/  1   E5  689
+1 UH   G V Q      RY⌑ T    1*U  J      X6E      F‡9      0BJ .      2   E5  689
+U J #  16  HA   Q   LY  0T  5&C   -   N  X@   7 E 2 *  K   ZS   9   1   G5  783
+1 &CQ   LY   T  5   ⌑E-   N‡ X@   7   2G   B  MRS , 9   4I  $   O   2   G5  783
+   Y$   9   E/M   VQ.      B5J   9NH    ⌑T$     6ZE   JI@      3WR  1   A5  880
+1U &  Y$7  4C#K 8    VQ.S  *3,  Y7‡F N    R⌑TO  4XC  *   JI@   1UP  2   A5  880
 END
-DS4 8DS4 8F4  8F4  8DS4 8DS4 8D4  8D4  8DS4 8DS4 8F4  8F4  8DS4 8DS4 8D4  8  001 
-R4  4R2  2G4  2C5  2AS4 2C5  2AS4 2AS4 4AS4 2G4  2AS4 4AS4 4AS4 4F4  2G4  2  002 
-G4 27G4  2C5  2AS4 2C5  2AS4 2AS4 4AS4 2G4  2AS4 4AS4 4AS4 4F4  2G4  2G4 27  003 
-G4  2C5  2AS4 2C5  2AS4 2C5  4DS5 4C5  2AS4 2C5  2AS4 2C5  4DS5 2DS513AS4 2  004 
-F5  2F5 14G4  2C5  2AS4 2C5  2AS4 2C5  4DS5 4C5  2AS4 2C5  2AS4 2C5  4DS5 2  005 
-DS513AS4 2AS4 2F5 11R4  4AS4 2AS4 4DS4 2C4  2DS4 2C4 13DS4 2AS4 2AS413D4  8  006 
-DS4 2DS4 2DS4 2AS4 2AS4 4DS4 2C4  2DS4 8C4  4R4  4R2  2DS4 2AS4 2AS4 2AS411  007 
-F4  6G4  2F4  4G4  2G4 17F4  8C4  4AS315G4 15D4  8D4  4DS4 2C4  2C5  2AS4 2  008 
-C5  2AS4 2AS4 4AS4 2G4  2AS4 4AS4 4AS4 4F4  2G4  2G4 27G4  2C5  2AS4 2C5  2  009 
-AS4 2AS4 4AS4 2G4  2AS4 4AS4 4AS4 4F4  2G4  2G4 27G4  2C5  2AS4 2C5  2AS4 2  010 
-C5  4DS5 4C5  2AS4 2C5  2AS4 2C5  4DS5 2DS513AS4 2F5  2F5 14G4  2C5  2AS4 2  011 
-C5  2AS4 2C5  4DS5 4C5  2AS4 2C5  2AS4 2C5  4DS5 2DS513AS4 2AS4 2F5 11R4  4  012 
-AS4 2AS4 4DS4 2C4  2DS4 2C4 13DS4 2AS4 2AS413D4  8DS4 2DS4 2DS4 2AS4 2AS4 4  013 
-DS4 2C4  2DS4 8C4  4R4  4R2  2DS4 2AS4 2AS4 2AS411F4  6G4  2F4  4G4  2G4 17  014 
-F4  8C4  4AS315G4 15D4  8D4  4DS4 2C4  2C5  2AS4 2C5  2AS4 2AS4 4AS4 3G4  3  015 
-AS4 4AS4 4DS5 7G4  2G4  1G4 21                                               016 
+A5  2G5  2E5  2G5  1E5  9E5  2D5  2C5  2D5  1E5  9A5  2G5  2E5  2G5  1E5  9  001 
+B4  1B4  1B4  2B4  2C5  2C5  2A4  2G4  2C5  2C5  2A4  2G4  2C5  3D5  3D5  4  002 
+B4  2B4  2B4  1B4  1C5  2C5  2A4  2G4  2C5  2C5  2A4  2G4  2C5  3D5  3D5  6  003 
+B4  2B4  2A5  2A5  2G5  2G5  2E5  2E5  2D5  2C5  2E5  3G5  3E5  4B4  1B4  1  004 
+B4  2B4  2C5  2C5  2A4  2G4  2C5  2C5  2A4  2G4 10A5  2G5  2E5  2G5  1E5  9  005 
+E5  2D5  2C5  2D5  1E5  9A5  2G5  2E5  2G5  1E5  9B4  1B4  1B4  2B4  2C5  2  006 
+C5  2A4  2G4  2C5  2C5  2A4  2G4  2C5  3D5  3D5  4B4  2B4  2B4  1B4  1C5  2  007 
+C5  2A4  2G4  2C5  2C5  2A4  2G4  2C5  3D5  3D5  6B4  2B4  2A5  2A5  2G5  2  008 
+G5  2E5  2E5  2D5  2C5  2E5  3G5  3E5  4B4  1B4  1B4  2B4  2C5  2C5  2A4  2  009 
+G4  2C5  2C5  2A4  2G4 10                                                    010 

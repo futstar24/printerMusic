@@ -91,6 +91,9 @@ def extract_melody_notes(file_path, instrumentName):
 
     if len(instrument.notes) == 0:
         print("instrument could not be found")
+        with open("public/output.txt", 'w', encoding="utf-8") as output:
+            output.truncate()
+            output.write("FAIL")
         return melody_notes
 
 
@@ -211,8 +214,6 @@ def end_line(index, lineLength): #For numbering cards at end of line
 
 
 def convert_to_print(noteList):
-    with open("public/output.txt", 'w', encoding="utf-8") as output:
-        output.write("FAIL")
     if len(melody_notes) == 0:
         return
     #Converts list of notes to print format, write to output file
@@ -281,7 +282,7 @@ playedNotes = 25 #how many notes to play
 
 for note in melody_notes: #for testing the music output
     if playedNotes > 0:
-        play_note(note[0],note[1]/40)  #speed the notes play
+        play_note(note[0],note[1]/12)  #speed the notes play
         playedNotes -= 1
 
 
