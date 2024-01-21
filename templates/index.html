@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<head>
+</head>
+
+<body>
+    <div style = "display: flex; flex-direction: column; gap: 15px; text-align: center; justify-content: center; align-items: center;">
+        
+        <form action = "/uploader" method = "POST" enctype="multipart/form-data" id = "uploadForm">
+            <input type="file" name="fileInput" id = "fileInput" accept=".midi,.mid" style = "margin: 0px; padding: 0px; margin-top: 20px;"/></input>
+            <div style = "margin-top: 15px;">
+                <label for = "instruments">Choose an Instrument</label>
+                <select id="instruments" name="instruments" style = "margin-bottom: 20px;"></select>
+            </div>
+        </form>
+    </div>
+    <div id = "button" style = "border-radius: 6px; background-color: lightgray; border: 2px solid black; width: 25%; margin: auto; text-align: center">
+        <p>Create My Song!</p>
+    </div>
+    {% if song == None %}
+    <div id = "downloadButton" style = "text-align: center; margin-top: 25px; opacity: 0; pointer-events: none; cursor: default;" >
+        <a href = "output.txt" download="output">Download My Song File!</a>
+    </div>
+    {% else %}
+    <div id = "downloadButton" style = "text-align: center; margin-top: 25px; opacity: 1; pointer-events: auto; cursor: pointer;" >
+        <a href = "{{url_for('download')}}">Download My Song File!</p>
+    </div>
+    {% endif %}
+    <script src="{{url_for('static', filename='script.js')}}"></script>
+</body>
