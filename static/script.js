@@ -14,44 +14,64 @@ midiInstruments.forEach((instrument) => {
     instruments.add(option);
   });
 
-song = true
-
-fetch("/getSongData").then(respone => respone.json()).then(function(data) {
-    console.log(data["song"])
-    if (data["song"] == "fail" && fileInput.files.length == 0) {
-        loadedSong.style.opacity = "0"
-        downloadSong.style.pointerEvents="none";
-        downloadSong.style.cursor="default"
-    } else {
-        loadedSong.style.opacity = "1"
-        downloadSong.style.pointerEvents="auto";
-        downloadSong.style.cursor="pointer";
-    }
-})
-
 playButton.addEventListener("click", function() {
     recieveMusic()
 })
 
+resetSong()
+
 document.getElementById("button").addEventListener("click", function() {
 
-  if (fileInput.files.length > 0) {
-    uploadForm.submit()
-    loadedSong.style.opacity = "1"
-    downloadSong.style.pointerEvents="auto";
-    downloadSong.style.cursor="pointer";
-  }
+    const formData = new FormData();
+    formData.append("midiFile", fileInput.files[0]);
+    formData.append("instrument", instruments.value)
+    if (fileInput.files.length > 0) {
+        fetch("/uploader", {
+            method: "POST",
+            body: formData,
+        }).then(respone => respone.json()).then(function(data) {
+            if (data["result"] == "success") {
+                loadedSong.style.opacity = "1"
+                downloadSong.style.pointerEvents="auto";
+                downloadSong.style.cursor="pointer";
+                alert("Success! Your Song File was Created!")
+            }
+            else {
+                alert("Insturment Not Found in Song File")
+
+            }
+        })
+    }
 
 })
 
 document.getElementById("fileInput").addEventListener("click", function() {
-  loadedSong.style.opacity = "0"
-  downloadSong.style.pointerEvents="none";
-  downloadSong.style.cursor="default"
-  fetch("/resetSong").then(respone => respone.json()).then(function(data) {
-    console.log(data["result"])
-  })
+    resetSong()
+    ableToPlay = false
 })
+
+instruments.addEventListener("change", function() {
+    resetSong()
+})
+
+function resetSong() {
+    loadedSong.style.opacity = "0"
+    downloadSong.style.pointerEvents="none";
+    downloadSong.style.cursor="default"
+    fetch("/resetSong").then(respone => respone.json()).then(function(data) {
+        console.log(data["result"])
+    })
+}
+
+
+stopButton.addEventListener("click", function() {
+    ableToPlay = false
+})
+
+maxNotes = 20
+noteIndex = 0
+timeFactor = 8
+ableToPlay = true
 
 function recieveMusic() {
     fetch("/sendMusicData").then(respone => respone.json()).then(function(data) {
@@ -63,29 +83,27 @@ function recieveMusic() {
             note.push(rawNoteList[i][1])
             noteList.push(note)
         }
+        noteIndex = 0
+        ableToPlay = true
         playSong(noteList)
     })
 }
 
-maxNotes = 20
-noteIndex = 0
-timeFactor = 8
-
 function playSong(noteList) {
-    duration = 0
-    if (noteIndex != 0) {
-        duration = noteList[noteIndex-1][1]
-    }
-    console.log(duration)
-    setTimeout(function() {
-        note = noteList[noteIndex]
-        duration = 1000
-        playNote(note[0],note[1]/timeFactor)
-        noteIndex += 1
-        if (noteIndex < maxNotes) {
-            playSong(noteList)
+    if (noteIndex < maxNotes && ableToPlay) {
+        duration = 0
+        if (noteIndex != 0) {
+            duration = noteList[noteIndex-1][1]
         }
-    }, (duration*1000)/(timeFactor))
+        console.log(duration)
+        setTimeout(function() {
+            note = noteList[noteIndex]
+            duration = 1000
+            playNote(note[0],note[1]/timeFactor)
+            noteIndex += 1
+            playSong(noteList)
+        }, (duration*1000)/(timeFactor))
+    }
 } 
 
 

@@ -1,5 +1,4 @@
 pretty_midi
 numpy
 flask
-simpleaudio
 gunicorn

@@ -1,9 +1,7 @@
 import pretty_midi
 import os
 import numpy as np
-#import sounddevice as sd
 from math import floor
-import simpleaudio as sa
 
 
 noteList = None
@@ -171,19 +169,9 @@ def makeSong(instrument):
     
     convert_to_print(melody_notes)
 
-    #playSong(melody_notes)
-
     noteList = melody_notes
 
     return len(melody_notes) != 0
-
-def playSong(melody_notes):
-    playedNotes = 10 #how many notes to play
-
-    for note in melody_notes: #for testing the music output
-        if playedNotes > 0:
-            play_note(note[0],note[1]/12)  #speed the notes play
-            playedNotes -= 1
 
 def sort_freqs(freqSet):
     tempList = list(freqSet)
@@ -234,7 +222,6 @@ def convert_to_print(noteList):
     note_count = 0
     card_total = len(noteList)//15
     with open("output.txt", 'w', encoding="utf-8") as output:
-        print("edddddd")
         for freq in freqList:
             line = note_lines[freq]
             output.write(f'{line}\n')
@@ -252,30 +239,6 @@ def convert_to_print(noteList):
                     break
                 note_count += 1
             output.write(f'{end_line(i+1, note_count)}\n')
-
-def generate_wave(frequency, duration, amplitude=0.5, sample_rate=44100):
-    t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
-    wave = amplitude * np.sin(2 * np.pi * frequency * t)
-    return wave
-
-def play_note(note, duration=1.0): #for testing the music output
-    print(note)
-    try:
-        frequency = note_frequencies[note]
-    except:
-        frequency = 0
-
-
-    wave = generate_wave(frequency, duration)
-
-    wave = (wave * 32767).astype(np.int16)
-    # Convert to 16-bit PCM format
-
-    # Play the note using simpleaudio
-    play_obj = sa.play_buffer(wave, 1, 2, 44100)
-    play_obj.wait_done()
-
-
 
 from flask import *
 
@@ -295,33 +258,27 @@ song = ""
 def home():
     return render_template("index.html", song = song)
 
-@app.route('/uploader', methods = ['GET', 'POST'])
+@app.route('/uploader', methods = ['POST'])
 def upload_file():
    global song
    if request.method == 'POST':
-        file = request.files['fileInput']
-        instrument = request.form.get("instruments")
+        file = request.files["midiFile"]
+        instrument = request.form.get("instrument")
         print(instrument)
         song = file
         file.save(os.path.join(app.config["UPLOAD_FOLDER"], "midiSong.mid"))
         songCreated = makeSong(instrument)
         if not songCreated:
-            song = None
-        return redirect(url_for("home"))
+            return {"result":"fail"}
+        else:
+            return {"result":"success"}
 
 @app.route('/download')
 def download():
     return send_file("output.txt", as_attachment=True)
-
-@app.route('/listen', methods = ['GET', 'POST'])
-def listen():
-    if request.method == 'POST':
-        playSong(noteList)
-        return redirect(url_for("home"))
     
 @app.route('/sendMusicData', methods = ["GET"])
 def sendMusicData():
-    print(noteList)
     return {"noteList":noteList}
 
 @app.route("/getSongData", methods = ["GET"])

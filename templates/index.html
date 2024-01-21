@@ -6,7 +6,7 @@
 <body>
     <div style = "display: flex; flex-direction: column; gap: 15px; text-align: center; justify-content: center; align-items: center;">
         
-        <form action = "/uploader" method = "POST" enctype="multipart/form-data" id = "uploadForm">
+        <form id = "uploadForm">
             <input type="file" name="fileInput" id = "fileInput" accept=".midi,.mid" style = "margin: 0px; padding: 0px; margin-top: 20px;"/></input>
             <div style = "margin-top: 15px;">
                 <label for = "instruments">Choose an Instrument</label>
@@ -20,7 +20,10 @@
 
     {% if song == "" %}
     <div id = "loadedSong" style = "text-align: center; margin-top: 25px; opacity: 0;" >
-        <img src="{{url_for('static', filename='playButton.png')}}" style="width: 50px;" id = "playButton">
+        <div style = "display: flex; flex-direction: row; justify-content: center; gap: 20px">
+            <img src="{{url_for('static', filename='playButton.png')}}" style="width: 50px;" id = "playButton">
+            <img src="{{url_for('static', filename='stopButton.png')}}" style="width: 40px; object-fit: contain;" id = "stopButton">
+        </div>
         <p>Preview Your Song: ~20 notes</p>
         <div id = "downloadSong" style = "pointer-events: auto; cursor: pointer;">
             <a href = "{{url_for('download')}}">Download My Song File!</p>
@@ -28,7 +31,10 @@
     </div>
     {% else %}
     <div id = "loadedSong" style = "text-align: center; margin-top: 25px; opacity: 1;" >
-        <img src="{{url_for('static', filename='playButton.png')}}" style = "width: 50px;" id = "playButton">
+        <div style = "display: flex; flex-direction: row; justify-content: center; gap: 20px">
+            <img src="{{url_for('static', filename='playButton.png')}}" style="width: 50px;" id = "playButton">
+            <img src="{{url_for('static', filename='stopButton.png')}}" style="width: 40px; object-fit: contain;" id = "stopButton">
+        </div>
         <p>Preview Your Song: ~20 notes</p>
         <div id = "downloadSong" style = "pointer-events: auto; cursor: pointer;">
             <a href = "{{url_for('download')}}">Download My Song File!</p>
