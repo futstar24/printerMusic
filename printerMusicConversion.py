@@ -3,12 +3,13 @@
 import subprocess
 import sys
 
-'''def install(package):
+def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 install("pretty_midi")
-install("sounddevice")'''
+install("sounddevice")
 
 import pretty_midi
+import os
 import numpy as np
 import sounddevice as sd
 from math import floor
@@ -72,7 +73,7 @@ noteNames = set([]) #Set of unique frequencies
 
 def extract_melody_notes(file_path, instrumentName):
     # Load MIDI file
-    midi_data = pretty_midi.PrettyMIDI("test_songs/"+file_path)
+    midi_data = pretty_midi.PrettyMIDI(file_path)
 
     # Get the instrument (assuming it's the first instrument)
     # You may need to modify this based on your MIDI file structure
@@ -164,10 +165,28 @@ def extract_melody_notes(file_path, instrumentName):
     return melody_notes
 
 # Specify the path to your MIDI file
-midi_file_path = "star-spangled banner.midi"
 
+def get_first_element(folder_path):
+    # List all files and directories in the specified folder
+    all_elements = os.listdir(folder_path)
+
+    # Filter out directories, leaving only files
+    files_only = [element for element in all_elements if os.path.isfile(os.path.join(folder_path, element))]
+
+    for file in files_only:
+        if "instrument" in file:
+            files_only.remove(file)
+    # Return the first file (or None if there are no files)
+    return files_only[0] if files_only else None
+
+# Example usage
+folder_path = "public/song/"
+midi_file_path = folder_path+get_first_element(folder_path)
+
+with open("public/song/instrument.txt","r") as file:
+    instrument = file.read()
 # Extract the melody notes from the MIDI file
-melody_notes = extract_melody_notes(midi_file_path,"Acoustic Grand Piano")
+melody_notes = extract_melody_notes(midi_file_path,instrument)
 
 def sort_freqs(freqSet):
     tempList = list(freqSet)
@@ -192,6 +211,10 @@ def end_line(index, lineLength): #For numbering cards at end of line
 
 
 def convert_to_print(noteList):
+    with open("public/output.txt", 'w', encoding="utf-8") as output:
+        output.write("FAIL")
+    if len(melody_notes) == 0:
+        return
     #Converts list of notes to print format, write to output file
     #Parameters: List of notes (each note is a list of [str: note name, int: duration])
     #Returns: None
@@ -216,7 +239,7 @@ def convert_to_print(noteList):
 
     note_count = 0
     card_total = len(noteList)//15
-    with open("output.txt", 'w', encoding="utf-8") as output:
+    with open("public/output.txt", 'w', encoding="utf-8") as output:
         for freq in freqList:
             line = note_lines[freq]
             output.write(f'{line}\n')
@@ -253,7 +276,12 @@ convert_to_print(melody_notes)
 
 
 
-'''for note in melody_notes: #for testing the music output
-    play_note(note[0],note[1]/8)'''
+
+playedNotes = 25 #how many notes to play
+
+for note in melody_notes: #for testing the music output
+    if playedNotes > 0:
+        play_note(note[0],note[1]/40)  #speed the notes play
+        playedNotes -= 1
 
 
