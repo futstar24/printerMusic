@@ -120,7 +120,6 @@ app.post('/makeSong', (req, res) => {
         }
         console.log(output)
     })
-    
 });
 
 app.post("/saveInstrument", (req,res) => {
@@ -132,6 +131,7 @@ app.post("/saveInstrument", (req,res) => {
 app.post("/removeOldFiles", (req, res) => {
     const folderPathToRemoveFiles = 'public/song';
     removeFilesInFolder(folderPathToRemoveFiles);
+    res.sendStatus(200)
 })
 
 app.post('/saveFile', upload.single("file"), (req, res) => {

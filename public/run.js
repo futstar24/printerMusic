@@ -1,8 +1,9 @@
-
 document.getElementById("fileInput").addEventListener("change", function() {
     fetch('/removeOldFiles', {
         method: "POST",
-        })
+        }).catch(error => {
+            console.error('Error:', error);
+            });
     downloadButton.style.opacity = "0"
     downloadButton.style.pointerEvents="none";
     downloadButton.style.cursor="default"
