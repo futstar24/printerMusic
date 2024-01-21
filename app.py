@@ -6,7 +6,7 @@ from math import floor
 import simpleaudio as sa
 
 
-
+noteList = None
 
 
 
@@ -161,6 +161,7 @@ def extract_melody_notes(file_path, instrumentName):
 
 
 def makeSong(instrument):
+    global noteList
     print(instrument)
     midi_file_path = "song/midiSong.mid"
     # Extract the melody notes from the MIDI file
@@ -170,16 +171,19 @@ def makeSong(instrument):
     
     convert_to_print(melody_notes)
 
+    #playSong(melody_notes)
 
-    '''playedNotes = 10 #how many notes to play
+    noteList = melody_notes
+
+    return len(melody_notes) != 0
+
+def playSong(melody_notes):
+    playedNotes = 10 #how many notes to play
 
     for note in melody_notes: #for testing the music output
         if playedNotes > 0:
             play_note(note[0],note[1]/12)  #speed the notes play
-            playedNotes -= 1'''
-
-
-    return len(melody_notes) != 0
+            playedNotes -= 1
 
 def sort_freqs(freqSet):
     tempList = list(freqSet)
@@ -264,11 +268,11 @@ def play_note(note, duration=1.0): #for testing the music output
 
     wave = generate_wave(frequency, duration)
 
+    wave = (wave * 32767).astype(np.int16)
     # Convert to 16-bit PCM format
-    audio_format = sa.SampleFormatPCM16
 
     # Play the note using simpleaudio
-    play_obj = sa.play_buffer(wave, 1, 2, 44100, format=audio_format)
+    play_obj = sa.play_buffer(wave, 1, 2, 44100)
     play_obj.wait_done()
 
 
@@ -308,6 +312,12 @@ def upload_file():
 @app.route('/download')
 def download():
     return send_file("output.txt", as_attachment=True)
+
+@app.route('/listen', methods = ['GET', 'POST'])
+def listen():
+    if request.method == 'POST':
+        playSong(noteList)
+        return redirect(url_for("home"))
 
 if __name__ == "__main__":
     app.run(debug=False)
