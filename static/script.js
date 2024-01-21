@@ -47,7 +47,6 @@ document.getElementById("button").addEventListener("click", function() {
 
 document.getElementById("fileInput").addEventListener("click", function() {
     resetSong()
-    ableToPlay = false
 })
 
 instruments.addEventListener("change", function() {
@@ -61,6 +60,7 @@ function resetSong() {
     fetch("/resetSong").then(respone => respone.json()).then(function(data) {
         console.log(data["result"])
     })
+    ableToPlay = false
 }
 
 
