@@ -7,7 +7,7 @@ const note_frequencies = {
     'C6': 1046.50, 'CS6': 1108.73, 'D6': 1174.66, 'DS6': 1244.51, 'E6': 1318.51, 'F6': 1396.91, 'FS6': 1479.98, 'G6': 1567.98, 'GS6': 1661.22, 'A6': 1760.00, 'AS6': 1864.66, 'B6': 1975.53, "Rest": 0
 }
 
-midiInstruments.forEach((instrument) => {
+midiInstruments.forEach((instrument) => { //populate select box with all midi instrument options
     const option = document.createElement("option");
     option.value = instrument;
     option.text = instrument;
@@ -20,7 +20,7 @@ playButton.addEventListener("click", function() {
 
 resetSong()
 
-document.getElementById("button").addEventListener("click", function() {
+document.getElementById("button").addEventListener("click", function() { //upload and create song
 
     const formData = new FormData();
     formData.append("midiFile", fileInput.files[0]);
@@ -53,7 +53,7 @@ instruments.addEventListener("change", function() {
     resetSong()
 })
 
-function resetSong() {
+function resetSong() { //set song value to zero (hide download button) if any file or instrument data is changed to prevent errors
     loadedSong.style.opacity = "0"
     downloadSong.style.pointerEvents="none";
     downloadSong.style.cursor="default"
@@ -73,7 +73,7 @@ noteIndex = 0
 timeFactor = 8
 ableToPlay = true
 
-function recieveMusic() {
+function recieveMusic() { //recieve the melody notes to play them with audio player
     fetch("/sendMusicData").then(respone => respone.json()).then(function(data) {
         rawNoteList = data["noteList"]
         noteList = []

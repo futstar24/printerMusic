@@ -1,6 +1,5 @@
 import pretty_midi
 import os
-import numpy as np
 from math import floor
 
 
@@ -48,16 +47,6 @@ note_lines = {  "C3" : "               U               I               K    *   
                 "C6" : "&9 $&  VM8  I *UL    7$&K V    I8* L  UH7  KA TK6 I * SJ  H7   %$   1   C6  1046"
 }
 
-
-
-# Note frequencies (for testing)
-note_frequencies = {
-    'C3': 130.81, 'CS3': 138.59, 'D3': 146.83, 'DS3': 155.56, 'E3': 164.81, 'F3': 174.61, 'FS3': 185.00, 'G3': 196.00, 'GS3': 207.65, 'A3': 220.00, 'AS3': 233.08, 'B3': 246.94,
-    'C4': 261.63, 'CS4': 277.18, 'D4': 293.66, 'DS4': 311.13, 'E4': 329.63, 'F4': 349.23, 'FS4': 369.99, 'G4': 392.00, 'GS4': 415.30, 'A4': 440.00, 'AS4': 466.16, 'B4': 493.88,
-    'C5': 523.25, 'CS5': 554.37, 'D5': 587.33, 'DS5': 622.25, 'E5': 659.26, 'F5': 698.46, 'FS5': 739.99, 'G5': 783.99, 'GS5': 830.61, 'A5': 880.00, 'AS5': 932.33, 'B5': 987.77,
-    'C6': 1046.50, 'CS6': 1108.73, 'D6': 1174.66, 'DS6': 1244.51, 'E6': 1318.51, 'F6': 1396.91, 'FS6': 1479.98, 'G6': 1567.98, 'GS6': 1661.22, 'A6': 1760.00, 'AS6': 1864.66, 'B6': 1975.53, "Rest": 0
-}
-
 instruments_midiNumbers = {
     'Acoustic Grand Piano': 0, 'Bright Acoustic Piano': 1, 'Electric Grand Piano': 2, 'Honky-tonk Piano': 3, 'Electric Piano 1': 4, 'Electric Piano 2': 5, 'Harpsichord': 6, 'Clavinet': 7, 'Celesta': 8, 'Glockenspiel': 9, 'Music Box': 10, 'Vibraphone': 11, 'Marimba': 12, 'Xylophone': 13, 'Tubular Bells': 14, 'Dulcimer': 15, 'Drawbar Organ': 16, 'Percussive Organ': 17, 'Rock Organ': 18, 'Church Organ': 19, 'Reed Organ': 20, 'Accordion': 21, 'Harmonica': 22, 'Tango Accordion': 23, 'Acoustic Guitar (nylon)': 24, 'Acoustic Guitar (steel)': 25, 'Electric Guitar (jazz)': 26, 'Electric Guitar (clean)': 27, 'Electric Guitar (muted)': 28, 'Overdriven Guitar': 29, 'Distortion Guitar': 30, 'Guitar Harmonics': 31, 'Acoustic Bass': 32, 'Electric Bass (finger)': 33, 'Electric Bass (pick)': 34, 'Fretless Bass': 35, 'Slap Bass 1': 36, 'Slap Bass 2': 37, 'Synth Bass 1': 38, 'Synth Bass 2': 39, 'Violin': 40, 'Viola': 41, 'Cello': 42, 'Contrabass': 43, 'Tremolo Strings': 44, 'Pizzicato Strings': 45, 'Orchestral Harp': 46, 'Timpani': 47, 'String Ensemble 1': 48, 'String Ensemble 2': 49, 'SynthStrings 1': 50, 'SynthStrings 2': 51, 'Choir Aahs': 52, 'Voice Oohs': 53, 'Synth Voice': 54, 'Orchestra Hit': 55, 'Trumpet': 56, 'Trombone': 57, 'Tuba': 58, 'Muted Trumpet': 59, 'French Horn': 60, 'Brass Section': 61, 'SynthBrass 1': 62, 'SynthBrass 2': 63, 'Soprano Sax': 64, 'Alto Sax': 65, 'Tenor Sax': 66, 'Baritone Sax': 67, 'Oboe': 68, 'English Horn': 69, 'Bassoon': 70, 'Clarinet': 71, 'Piccolo': 72, 'Flute': 73, 'Recorder': 74, 'Pan Flute': 75, 'Blown Bottle': 76, 'Shakuhachi': 77, 'Whistle': 78, 'Ocarina': 79, 'Lead 1 (square)': 80, 'Lead 2 (sawtooth)': 81, 'Lead 3 (calliope)': 82, 'Lead 4 (chiff)': 83, 'Lead 5 (charang)': 84, 'Lead 6 (voice)': 85, 'Lead 7 (fifths)': 86, 'Lead 8 (bass + lead)': 87, 'Pad 1 (new age)': 88, 'Pad 2 (warm)': 89, 'Pad 3 (polysynth)': 90, 'Pad 4 (choir)': 91, 'Pad 5 (bowed)': 92, 'Pad 6 (metallic)': 93, 'Pad 7 (halo)': 94, 'Pad 8 (sweep)': 95, 'FX 1 (rain)': 96, 'FX 2 (soundtrack)': 97, 'FX 3 (crystal)': 98, 'FX 4 (atmosphere)': 99, 'FX 5 (brightness)': 100, 'FX 6 (goblins)': 101, 'FX 7 (echoes)': 102, 'FX 8 (sci-fi)': 103, 'Sitar': 104, 'Banjo': 105, 'Shamisen': 106, 'Koto': 107, 'Kalimba': 108, 'Bagpipe': 109, 'Fiddle': 110, 'Shanai': 111, 'Tinkle Bell': 112, 'Agogo': 113, 'Steel Drums': 114, 'Woodblock': 115, 'Taiko Drum': 116, 'Melodic Tom': 117, 'Synth Drum': 118, 'Reverse Cymbal': 119, 'Guitar Fret Noise': 120, 'Breath Noise': 121, 'Seashore': 122, 'Bird Tweet': 123, 'Telephone Ring': 124, 'Helicopter': 125, 'Applause': 126, 'Gunshot': 127
 }
@@ -65,11 +54,8 @@ instruments_midiNumbers = {
 noteNames = set([]) #Set of unique frequencies
 
 def extract_melody_notes(file_path, instrumentName):
-    # Load MIDI file
-    midi_data = pretty_midi.PrettyMIDI(file_path)
 
-    # Get the instrument (assuming it's the first instrument)
-    # You may need to modify this based on your MIDI file structure
+    midi_data = pretty_midi.PrettyMIDI(file_path)
 
     melody_notes = []
     instrument = pretty_midi.Instrument(0)
@@ -77,7 +63,7 @@ def extract_melody_notes(file_path, instrumentName):
         selectedInstrument = instruments_midiNumbers[instrumentName]
         instruments = midi_data.instruments
         for possibleInstrument in instruments:
-            if possibleInstrument.program == selectedInstrument and len(possibleInstrument.notes) > len(instrument.notes):
+             if possibleInstrument.program == selectedInstrument and len(possibleInstrument.notes) > len(instrument.notes):
                 instrument = possibleInstrument
     except:
         pass
@@ -87,7 +73,7 @@ def extract_melody_notes(file_path, instrumentName):
         return melody_notes
 
 
-    # Extract notes and their properties
+    # Extract tempos from song to ensure note durations are set correctly
     tempoChanges = midi_data.get_tempo_changes()
     tempoTimes = tempoChanges[0].tolist()
     tempos = tempoChanges[1].tolist()
@@ -95,7 +81,7 @@ def extract_melody_notes(file_path, instrumentName):
     currentTempo = tempos[currentTempoIndex]
     removeableNotes = []
 
-    for i in range(len(instrument.notes)): #If multiple notes start at a time while another note is already playing, reduce to only playing the highest note
+    for i in range(len(instrument.notes)): #If multiple notes start at a time while another note is already playing, reduce to only playing the highest pitched note
         j = i+1
         while j < len(instrument.notes):
             note1 = instrument.notes[i]
@@ -198,8 +184,7 @@ def end_line(index, lineLength): #For numbering cards at end of line
 def convert_to_print(noteList):
     #Converts list of notes to print format, write to output file
     #Parameters: List of notes (each note is a list of [str: note name, int: duration])
-    #Returns: None
-    #print(noteList)
+    #Returns: None 
 
     freqList = sort_freqs(noteNames)
 
@@ -221,7 +206,7 @@ def convert_to_print(noteList):
 
     note_count = 0
     card_total = len(noteList)//15
-    with open("output.txt", 'w', encoding="utf-8") as output:
+    with open("output.txt", 'w', encoding="utf-8") as output: # create output file
         for freq in freqList:
             line = note_lines[freq]
             output.write(f'{line}\n')
@@ -243,12 +228,11 @@ def convert_to_print(noteList):
 from flask import *
 
 app = Flask(__name__)
-
+ 
 UPLOAD_FOLDER = 'song'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'super secret key'
 
-# Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 song = ""
@@ -259,7 +243,7 @@ def home():
     return render_template("index.html", song = song)
 
 @app.route('/uploader', methods = ['POST'])
-def upload_file():
+def upload_file(): #upload song from html input to files so that it can be read
    global song
    if request.method == 'POST':
         file = request.files["midiFile"]
@@ -283,7 +267,7 @@ def sendMusicData():
 
 @app.route("/getSongData", methods = ["GET"])
 def getSongData():
-    if song == "":
+    if song == "": 
         return {"song":"fail"}
     else:
         return {"song":"success"}
